@@ -2,3 +2,5 @@ Heroku
 pyproject.toml
 .python_version
 **venv**
+.python-version
+uv.lock
