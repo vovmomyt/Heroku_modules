@@ -213,6 +213,7 @@ class CyberGuardMod(loader.Module):
             entity = await self.client.get_entity(args)
             self.log_chat = entity.id
             self.db.set("CyberGuard", "log_chat", self.log_chat)
+            await utils.invite_inline_bot(self._client, self.log_chat)
             chat_name = getattr(entity, 'title', getattr(entity, 'username', str(self.log_chat)))
             await message.edit(self.strings("setlog_success").format(chat_name))
         except Exception as e:
