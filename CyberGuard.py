@@ -158,20 +158,24 @@ class CyberGuardMod(loader.Module):
         self.db = db
         self.me = await client.get_me()
         self.my_id = self.me.id
-        self.c, _ = await utils.asset_channel(
+        self.enabled = db.get("CyberGuard", "enabled", False)
+        self.log_chat = db.get("CyberGuard", "log_chat", None)
+        if self.log_chat == None:
+            self.c, _ = await utils.asset_channel(
             self._client,
             "CyberGuard",
             "🔇 Chat for CyberGuard messages",
             silent=True,
             invite_bot=True,
-        )
-        self.enabled = db.get("CyberGuard", "enabled", False)
-        self.log_chat = db.get("CyberGuard", "log_chat", None)
-        if self.log_chat == None:
+            )
             self.log_chat = f"-100{self.c.id}"
             db.set("CyberGuard","log_chat", f"-100{self.c.id}")
+        else:
+            await utils.invite_inline_bot(
+                self._client,
+                self.log_chat
+            )
         client.add_event_handler(self.on_message, events.NewMessage(incoming=True))
-
     # --- Commands ---
     
     async def guard_oncmd(self, message):
