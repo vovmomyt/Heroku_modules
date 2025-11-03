@@ -168,7 +168,7 @@ class CyberGuardMod(loader.Module):
             silent=True,
             invite_bot=True,
             )
-            self.log_chat = f"-100{self.c.id}"
+            self.log_chat = int(f"-100{self.c.id}")
             db.set("CyberGuard","log_chat", f"-100{self.c.id}")
         else:
             await utils.invite_inline_bot(
@@ -211,7 +211,7 @@ class CyberGuardMod(loader.Module):
             return await message.edit(self.strings("setlog_usage").format(prefix=self.get_prefix()))
         try:
             entity = await self.client.get_entity(args)
-            self.log_chat = entity.id
+            self.log_chat = int(f"-100{entity.id}")
             self.db.set("CyberGuard", "log_chat", self.log_chat)
             await utils.invite_inline_bot(self._client, self.log_chat)
             chat_name = getattr(entity, 'title', getattr(entity, 'username', str(self.log_chat)))
