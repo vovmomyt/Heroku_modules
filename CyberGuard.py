@@ -1,6 +1,5 @@
 #meta developer: @krevetkoff and @pakk_user
-#changelog: many fixes, now it works!
-__version__ = (0, 1, 0)
+__version__ = (0, 0, 1)
 from .. import loader, utils
 from telethon import events
 from telethon.tl.types import MessageEntityMention, MessageEntityMentionName
@@ -285,6 +284,11 @@ class CyberGuardMod(loader.Module):
             return
 
         loader.logger.info(f"[{self.strings('name')}] Mention detected. Reason: {reason}. Chat ID: {event.chat_id}")
+        if self.config["read_mentions"]:
+            await self.client.send_read_acknowledge(
+                chat.id,
+                clear_mentions=True,
+            )
         
         try:
             sender = await event.get_sender()
@@ -311,12 +315,7 @@ class CyberGuardMod(loader.Module):
         footer = self.strings("log_footer").format(link)
 
         target = self.log_chat or "me"
-        
-        if self.config["read_mentions"]:
-            await self.client.send_read_acknowledge(
-                chat.id,
-                clear_mentions=True,
-            )
+
 
         try:
             if event.message.media:
