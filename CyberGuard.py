@@ -24,9 +24,6 @@ class CyberGuardMod(loader.Module):
             "💡 If the log chat is broken, reset the DB: <code>{prefix}e self._db.pop(\"CyberGuard\", None)</code>"
         ),
         "log_chat_unset": "not set (will be created on first run)",
-        "setlog_usage": "❌ Specify @username or ID (example: <code>{prefix}setlog @mylog</code> or <code>{prefix}setlog -1001234567890</code>)",
-        "setlog_success": "✅ Log chat set successfully: <b>{}</b>",
-        "setlog_error": "❌ Failed to set chat: {}",
         "reason_mention_id": "mention (by id)",
         "reason_mention_username": "mention (by @username)",
         "reason_reply": "reply to your message",
@@ -53,12 +50,9 @@ class CyberGuardMod(loader.Module):
             "Включён: <b>{}</b>\n"
             "Чат для логов: <b><code>{}</code></b>\n\n"
             "Команды: <code>{prefix}guard_on</code>, <code>{prefix}guard_off</code>, <code>{prefix}guard_status</code>\n\n"
-            "💡 Если чат для логов не работает, сбросьте БД: <code>{prefix}e self._db.pop(\"CyberGuard\", None)</code>"
+            "💡 Если чат для логов не работает, сбросьте БД: <code>{prefix}e self._db.pop(\"CyberGuard\", None)</code>, после чего перезапустите Heroku."
         ),
         "log_chat_unset": "не задан (будет создан при первом запуске)",
-        "setlog_usage": "❌ Укажи @username чата или ID (пример: <code>{prefix}setlog @mylog</code> или <code>{prefix}setlog -1001234567890</code>)",
-        "setlog_success": "✅ Чат для логов установлен: <b>{}</b>",
-        "setlog_error": "❌ Не удалось установить чат: {}",
         "reason_mention_id": "упоминание (по id)",
         "reason_mention_username": "упоминание (по @username)",
         "reason_reply": "ответ на твоё сообщение",
@@ -88,9 +82,6 @@ class CyberGuardMod(loader.Module):
             "💡 Якщо чат для логів не працює, скиньте БД: <code>{prefix}e self._db.pop(\"CyberGuard\", None)</code>"
         ),
         "log_chat_unset": "не задано (буде створено при першому запуску)",
-        "setlog_usage": "❌ Вкажи @username чату або ID (приклад: <code>{prefix}setlog @mylog</code> або <code>{prefix}setlog -1001234567890</code>)",
-        "setlog_success": "✅ Чат для логів встановлено: <b>{}</b>",
-        "setlog_error": "❌ Не вдалося встановити чат: {}",
         "reason_mention_id": "згадка (за id)",
         "reason_mention_username": "згадка (за @username)",
         "reason_reply": "відповідь на твоє повідомлення",
@@ -120,9 +111,6 @@ class CyberGuardMod(loader.Module):
             "💡 Wenn der Log-Chat fehlschlägt, setzen Sie die DB zurück: <code>{prefix}e self._db.pop(\"CyberGuard\", None)</code>"
         ),
         "log_chat_unset": "nicht festgelegt (wird beim ersten Start erstellt)",
-        "setlog_usage": "❌ Gib den @username oder die ID des Chats an (Beispiel: <code>{prefix}setlog @mylog</code> oder <code>{prefix}setlog -1001234567890</code>)",
-        "setlog_success": "✅ Log-Chat erfolgreich festgelegt: <b>{}</b>",
-        "setlog_error": "❌ Festlegen des Chats fehlgeschlagen: {}",
         "reason_mention_id": "Erwähnung (nach ID)",
         "reason_mention_username": "Erwähnung (nach @username)",
         "reason_reply": "Antwort auf deine Nachricht",
