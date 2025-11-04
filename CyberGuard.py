@@ -5,8 +5,6 @@ from .. import loader, utils
 from telethon import events
 from telethon.tl.types import MessageEntityMention, MessageEntityMentionName
 from datetime import datetime
-import logging
-
 
 @loader.tds
 class CyberGuardMod(loader.Module):
