@@ -159,7 +159,7 @@ class CyberGuardMod(loader.Module):
         self._client = client
 
         if self.log_chat == 'None':
-            loader.logger.info(f"[{self.strings('name')}] Log chat not set. Creating new asset channel.")
+            loader.logger.debug(f"[{self.strings('name')}] Log chat not set. Creating new asset channel.")
             asset_channel, _ = await utils.asset_channel(
                 client, 
                 "CyberGuard",
@@ -171,32 +171,32 @@ class CyberGuardMod(loader.Module):
             new_log_chat_id_str = self._get_db_chat_id(asset_channel.id)
             self.log_chat = new_log_chat_id_str
             db.set("CyberGuard","log_chat", new_log_chat_id_str)
-            loader.logger.info(f"[{self.strings('name')}] Setting default log chat to asset channel ID: {new_log_chat_id_str}")
+            loader.logger.debug(f"[{self.strings('name')}] Setting default log chat to asset channel ID: {new_log_chat_id_str}")
         else:
-            loader.logger.info(f"[{self.strings('name')}] Attempting to invite inline bot to existing log chat: {self.log_chat}")
+            loader.logger.debug(f"[{self.strings('name')}] Attempting to invite inline bot to existing log chat: {self.log_chat}")
             try:
                 await utils.invite_inline_bot(
                     client,
                     self.log_chat
                 )
             except (RuntimeError, ValueError) as e:
-                loader.logger.error(f"[{self.strings('name')}] Failed to invite inline bot to existing log chat '{self.log_chat}': {e}. Continuing initialization.")
+                loader.logger.debug(f"[{self.strings('name')}] Failed to invite inline bot to existing log chat '{self.log_chat}': {e}. Continuing initialization.")
         
         client.add_event_handler(self.on_message, events.NewMessage(incoming=True))
-        loader.logger.info(f"[{self.strings('name')}] Module initialized. Enabled: {self.enabled}. Log Chat: {self.log_chat}")
+        loader.logger.debug(f"[{self.strings('name')}] Module initialized. Enabled: {self.enabled}. Log Chat: {self.log_chat}")
 
     async def guard_oncmd(self, message):
         """Включить оповещения """
         self.enabled = True
         self.db.set("CyberGuard", "enabled", True)
-        loader.logger.info(f"[{self.strings('name')}] Guard enabled by user command.")
+        loader.logger.debug(f"[{self.strings('name')}] Guard enabled by user command.")
         await message.edit(self.strings("enabled"))
 
     async def guard_offcmd(self, message):
         """Выключить оповещения"""
         self.enabled = False
         self.db.set("CyberGuard", "enabled", False)
-        loader.logger.info(f"[{self.strings('name')}] Guard disabled by user command.")
+        loader.logger.debug(f"[{self.strings('name')}] Guard disabled by user command.")
         await message.edit(self.strings("disabled"))
 
     async def guard_statuscmd(self, message):
@@ -270,10 +270,10 @@ class CyberGuardMod(loader.Module):
         if not reason:
             return
 
-        loader.logger.info(f"[{self.strings('name')}] Mention detected. Reason: {reason}. Chat ID: {event.chat_id}")
+        loader.logger.debug(f"[{self.strings('name')}] Mention detected. Reason: {reason}. Chat ID: {event.chat_id}")
         if self.config["read_mentions"]:
             await self.client.send_read_acknowledge(
-                chat.id,
+                event.chat_id,
                 clear_mentions=True,
             )
         
@@ -314,8 +314,8 @@ class CyberGuardMod(loader.Module):
                 if len(preview) > 800:
                     preview = preview[:800] + "…"
 
-                await self.inline.bot.send_message(target, header + f"💬 <i>{preview}</i>" + footer, parse_mode='html')
-            loader.logger.info(f"[{self.strings('name')}] Log successfully sent to chat {target}")
+                await self.inline.bot.send_message(target, header + f"💬 <i><code>{preview}</code></i>" + footer, parse_mode='html')
+            loader.logger.debug(f"[{self.strings('name')}] Log successfully sent to chat {target}")
         except Exception as e:
             loader.logger.error(f"[{self.strings('name')}] Log sending error to primary chat {target}: {e}")
             try:
