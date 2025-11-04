@@ -1,16 +1,17 @@
 #meta developer: @krevetkoff and @pakk_user
-#changelog: init dev
-__version__ = (0, 0, 1)
+#changelog: many fixes, now it works!
+__version__ = (0, 1, 0)
 from .. import loader, utils
 from telethon import events
 from telethon.tl.types import MessageEntityMention, MessageEntityMentionName
 from datetime import datetime
+import logging
+
 
 @loader.tds
 class CyberGuardMod(loader.Module):
     """CyberGuard — Get all your mentions in one place!"""
     
-    # Default strings (English)
     strings = {
         "name": "CyberGuard",
         "enabled": "<b>✅ CyberGuard enabled (reacts to mentions and replies)</b>",
@@ -19,9 +20,10 @@ class CyberGuardMod(loader.Module):
             "<b>CyberGuard Status:</b>\n\n"
             "Enabled: <b>{}</b>\n"
             "Log Chat: <b><code>{}</code></b>\n\n"
-            "Commands: <code>{prefix}setlog @chat</code>, <code>{prefix}guard_on</code>, <code>{prefix}guard_off</code>, <code>{prefix}guard_status</code>"
+            "Commands: <code>{prefix}guard_on</code>, <code>{prefix}guard_off</code>, <code>{prefix}guard_status</code>\n\n"
+            "💡 If the log chat is broken, reset the DB: <code>{prefix}e self._db.pop(\"CyberGuard\", None)</code>"
         ),
-        "log_chat_unset": "not set",
+        "log_chat_unset": "not set (will be created on first run)",
         "setlog_usage": "❌ Specify @username or ID (example: <code>{prefix}setlog @mylog</code> or <code>{prefix}setlog -1001234567890</code>)",
         "setlog_success": "✅ Log chat set successfully: <b>{}</b>",
         "setlog_error": "❌ Failed to set chat: {}",
@@ -43,7 +45,6 @@ class CyberGuardMod(loader.Module):
         "_cfg_read_mentions": "Mark a mention as read"
     }
 
-    # Russian strings
     strings_ru = {
         "enabled": "<b>✅ CyberGuard включён (реагирует на упоминания и ответы)</b>",
         "disabled": "<b>⏹️ CyberGuard выключен</b>",
@@ -51,9 +52,10 @@ class CyberGuardMod(loader.Module):
             "<b>CyberGuard:</b>\n\n"
             "Включён: <b>{}</b>\n"
             "Чат для логов: <b><code>{}</code></b>\n\n"
-            "Команды: <code>{prefix}setlog @chat</code>, <code>{prefix}guard_on</code>, <code>{prefix}guard_off</code>, <code>{prefix}guard_status</code>"
+            "Команды: <code>{prefix}guard_on</code>, <code>{prefix}guard_off</code>, <code>{prefix}guard_status</code>\n\n"
+            "💡 Если чат для логов не работает, сбросьте БД: <code>{prefix}e self._db.pop(\"CyberGuard\", None)</code>"
         ),
-        "log_chat_unset": "не задан",
+        "log_chat_unset": "не задан (будет создан при первом запуске)",
         "setlog_usage": "❌ Укажи @username чата или ID (пример: <code>{prefix}setlog @mylog</code> или <code>{prefix}setlog -1001234567890</code>)",
         "setlog_success": "✅ Чат для логов установлен: <b>{}</b>",
         "setlog_error": "❌ Не удалось установить чат: {}",
@@ -75,7 +77,6 @@ class CyberGuardMod(loader.Module):
         "_cfg_read_mentions": "Отметить упоминание как прочитанное"
     }
     
-    # Ukrainian strings
     strings_ua = {
         "enabled": "<b>✅ CyberGuard увімкнено (реагує на згадки та відповіді)</b>",
         "disabled": "<b>⏹️ CyberGuard вимкнено</b>",
@@ -83,9 +84,10 @@ class CyberGuardMod(loader.Module):
             "<b>CyberGuard:</b>\n\n"
             "Увімкнено: <b>{}</b>\n"
             "Чат для логів: <b><code>{}</code></b>\n\n"
-            "Команди: <code>{prefix}setlog @chat</code>, <code>{prefix}guard_on</code>, <code>{prefix}guard_off</code>, <code>{prefix}guard_status</code>"
+            "Команди: <code>{prefix}guard_on</code>, <code>{prefix}guard_off</code>, <code>{prefix}guard_status</code>\n\n"
+            "💡 Якщо чат для логів не працює, скиньте БД: <code>{prefix}e self._db.pop(\"CyberGuard\", None)</code>"
         ),
-        "log_chat_unset": "не задано",
+        "log_chat_unset": "не задано (буде створено при першому запуску)",
         "setlog_usage": "❌ Вкажи @username чату або ID (приклад: <code>{prefix}setlog @mylog</code> або <code>{prefix}setlog -1001234567890</code>)",
         "setlog_success": "✅ Чат для логів встановлено: <b>{}</b>",
         "setlog_error": "❌ Не вдалося встановити чат: {}",
@@ -107,18 +109,18 @@ class CyberGuardMod(loader.Module):
         "_cfg_read_mentions": "Позначити згадку як прочитану"
     }
 
-    # German strings
     strings_de = {
-        "enabled": "<b>✅ CyberGuard aktiviert (reagiert auf Erwähnungen und Antworten)</b>",
+        "enabled": "<b>✅ CyberGuard aktiviert (reagiert auf Erwähnungen и Antworten)</b>",
         "disabled": "<b>⏹️ CyberGuard deaktiviert</b>",
         "status_info": (
             "<b>CyberGuard-Status:</b>\n\n"
             "Aktiviert: <b>{}</b>\n"
             "Log-Chat: <b><code>{}</code></b>\n\n"
-            "Befehle: <code>{prefix}setlog @chat</code>, <code>{prefix}guard_on</code>, <code>{prefix}guard_off</code>, <code>{prefix}guard_status</code>"
+            "Befehle: <code>{prefix}guard_on</code>, <code>{prefix}guard_off</code>, <code>{prefix}guard_status</code>\n\n"
+            "💡 Wenn der Log-Chat fehlschlägt, setzen Sie die DB zurück: <code>{prefix}e self._db.pop(\"CyberGuard\", None)</code>"
         ),
-        "log_chat_unset": "nicht festgelegt",
-        "setlog_usage": "❌ Gib den @username oder die ID des Chats an (Beispiel: <code>{prefix}setlog @mylog</code> или <code>{prefix}setlog -1001234567890</code>)",
+        "log_chat_unset": "nicht festgelegt (wird beim ersten Start erstellt)",
+        "setlog_usage": "❌ Gib den @username oder die ID des Chats an (Beispiel: <code>{prefix}setlog @mylog</code> oder <code>{prefix}setlog -1001234567890</code>)",
         "setlog_success": "✅ Log-Chat erfolgreich festgelegt: <b>{}</b>",
         "setlog_error": "❌ Festlegen des Chats fehlgeschlagen: {}",
         "reason_mention_id": "Erwähnung (nach ID)",
@@ -139,11 +141,11 @@ class CyberGuardMod(loader.Module):
         "_cfg_read_mentions": "Eine Erwähnung als gelesen markieren"
     }
     
-    # --- Module Implementation ---
     
     def __init__(self):
         self.log_chat = None
         self.enabled = True
+        self._client = None
         self.config = loader.ModuleConfig(
             loader.ConfigValue(
                 "read_mentions",
@@ -153,49 +155,70 @@ class CyberGuardMod(loader.Module):
             )
         )
 
+    def _get_db_chat_id(self, entity_id):
+        entity_id_str = str(entity_id).strip()
+        
+        if entity_id_str.isdigit() and int(entity_id_str) > 0:
+            return f"-100{entity_id_str}"
+            
+        return entity_id_str
+
     async def client_ready(self, client, db):
         self.client = client
         self.db = db
         self.me = await client.get_me()
         self.my_id = self.me.id
         self.enabled = db.get("CyberGuard", "enabled", False)
-        self.log_chat = db.get("CyberGuard", "log_chat", None)
-        if self.log_chat == None:
-            self.c, _ = await utils.asset_channel(
-            self._client,
-            "CyberGuard",
-            "🔇 Chat for CyberGuard messages",
-            silent=True,
-            invite_bot=True,
+        self.log_chat = str(db.get("CyberGuard", "log_chat", None))
+        self._client = client
+
+        if self.log_chat == 'None':
+            loader.logger.info(f"[{self.strings('name')}] Log chat not set. Creating new asset channel.")
+            asset_channel, _ = await utils.asset_channel(
+                client, 
+                "CyberGuard",
+                "🔇 Chat for CyberGuard messages",
+                silent=True,
+                invite_bot=True,
             )
-            self.log_chat = int(f"-100{self.c.id}")
-            db.set("CyberGuard","log_chat", f"-100{self.c.id}")
+            
+            new_log_chat_id_str = self._get_db_chat_id(asset_channel.id)
+            self.log_chat = new_log_chat_id_str
+            db.set("CyberGuard","log_chat", new_log_chat_id_str)
+            loader.logger.info(f"[{self.strings('name')}] Setting default log chat to asset channel ID: {new_log_chat_id_str}")
         else:
-            await utils.invite_inline_bot(
-                self._client,
-                self.log_chat
-            )
+            loader.logger.info(f"[{self.strings('name')}] Attempting to invite inline bot to existing log chat: {self.log_chat}")
+            try:
+                await utils.invite_inline_bot(
+                    client,
+                    self.log_chat
+                )
+            except (RuntimeError, ValueError) as e:
+                loader.logger.error(f"[{self.strings('name')}] Failed to invite inline bot to existing log chat '{self.log_chat}': {e}. Continuing initialization.")
+        
         client.add_event_handler(self.on_message, events.NewMessage(incoming=True))
-    # --- Commands ---
-    
+        loader.logger.info(f"[{self.strings('name')}] Module initialized. Enabled: {self.enabled}. Log Chat: {self.log_chat}")
+
     async def guard_oncmd(self, message):
         """Включить оповещения """
         self.enabled = True
         self.db.set("CyberGuard", "enabled", True)
+        loader.logger.info(f"[{self.strings('name')}] Guard enabled by user command.")
         await message.edit(self.strings("enabled"))
 
     async def guard_offcmd(self, message):
-        """Выключить оповещения (.guard_off)"""
+        """Выключить оповещения"""
         self.enabled = False
         self.db.set("CyberGuard", "enabled", False)
+        loader.logger.info(f"[{self.strings('name')}] Guard disabled by user command.")
         await message.edit(self.strings("disabled"))
 
     async def guard_statuscmd(self, message):
-        """Статус CyberGuard (.guard_status)"""
+        """Статус CyberGuard"""
         unset_text = self.strings("log_chat_unset")
         status_info_template = self.strings("status_info")
 
-        chat_info = unset_text if not self.log_chat else str(self.log_chat)
+        chat_info = unset_text if not self.log_chat or self.log_chat == 'None' else str(self.log_chat)
         status_text = status_info_template.format(
             self.enabled,
             chat_info,
@@ -203,24 +226,6 @@ class CyberGuardMod(loader.Module):
         )
         await message.edit(status_text)
 
-
-    async def setlogcmd(self, message):
-        """Задать чат для логов (.setlog @chat или .setlog chat_id)"""
-        args = utils.get_args_raw(message)
-        if not args:
-            return await message.edit(self.strings("setlog_usage").format(prefix=self.get_prefix()))
-        try:
-            entity = await self.client.get_entity(args)
-            self.log_chat = int(f"-100{entity.id}")
-            self.db.set("CyberGuard", "log_chat", self.log_chat)
-            await utils.invite_inline_bot(self._client, self.log_chat)
-            chat_name = getattr(entity, 'title', getattr(entity, 'username', str(self.log_chat)))
-            await message.edit(self.strings("setlog_success").format(chat_name))
-        except Exception as e:
-            await message.edit(self.strings("setlog_error").format(e))
-
-    # --- Utility ---
-    
     def _make_msg_link(self, chat, event):
         try:
             if getattr(chat, "username", None):
@@ -236,8 +241,6 @@ class CyberGuardMod(loader.Module):
         except:
             pass
         return "n/a"
-
-    # --- Main Logic ---
     
     async def on_message(self, event):
         if not self.enabled:
@@ -281,6 +284,8 @@ class CyberGuardMod(loader.Module):
         if not reason:
             return
 
+        loader.logger.info(f"[{self.strings('name')}] Mention detected. Reason: {reason}. Chat ID: {event.chat_id}")
+        
         try:
             sender = await event.get_sender()
         except:
@@ -306,11 +311,12 @@ class CyberGuardMod(loader.Module):
         footer = self.strings("log_footer").format(link)
 
         target = self.log_chat or "me"
+        
         if self.config["read_mentions"]:
-            await self._client.send_read_acknowledge(
-            chat.id,
-            clear_mentions=True,
-        )
+            await self.client.send_read_acknowledge(
+                chat.id,
+                clear_mentions=True,
+            )
 
         try:
             if event.message.media:
@@ -323,13 +329,15 @@ class CyberGuardMod(loader.Module):
                     preview = preview[:800] + "…"
 
                 await self.inline.bot.send_message(target, header + f"💬 <i>{preview}</i>" + footer, parse_mode='html')
+            loader.logger.info(f"[{self.strings('name')}] Log successfully sent to chat {target}")
         except Exception as e:
-            print(self.strings("log_error_send").format(e))
+            loader.logger.error(f"[{self.strings('name')}] Log sending error to primary chat {target}: {e}")
             try:
                 error_msg = self.strings("log_error_message").format(
                     e,
                     event.raw_text or self.strings("media_placeholder")
                 )
                 await self.client.send_message("me", header + error_msg, parse_mode='html')
-            except:
-                pass
+                loader.logger.warning(f"[{self.strings('name')}] Error log successfully sent to 'me'.")
+            except Exception as e_me:
+                loader.logger.critical(f"[{self.strings('name')}] CRITICAL: Failed to send error log even to 'me': {e_me}")
