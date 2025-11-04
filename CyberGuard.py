@@ -21,7 +21,7 @@ class CyberGuardMod(loader.Module):
             "Enabled: <b>{}</b>\n"
             "Log Chat: <b><code>{}</code></b>\n\n"
             "Commands: <code>{prefix}guard_on</code>, <code>{prefix}guard_off</code>, <code>{prefix}guard_status</code>\n\n"
-            "💡 If the log chat is broken, reset the DB: <code>{prefix}e self._db.pop(\"CyberGuard\", None)</code>"
+            "💡 If the chat logs aren't working, reset the database: <code>{prefix}e self._db.pop(\"CyberGuard\", None)</code>, then restart Heroku with <code>{prefix}restart -f</code>."
         ),
         "log_chat_unset": "not set (will be created on first run)",
         "reason_mention_id": "mention (by id)",
@@ -50,7 +50,7 @@ class CyberGuardMod(loader.Module):
             "Включён: <b>{}</b>\n"
             "Чат для логов: <b><code>{}</code></b>\n\n"
             "Команды: <code>{prefix}guard_on</code>, <code>{prefix}guard_off</code>, <code>{prefix}guard_status</code>\n\n"
-            "💡 Если чат для логов не работает, сбросьте БД: <code>{prefix}e self._db.pop(\"CyberGuard\", None)</code>, после чего перезапустите Heroku."
+            "💡 Если чат для логов не работает, сбросьте БД: <code>{prefix}e self._db.pop(\"CyberGuard\", None)</code>, после чего перезапустите Heroku командой <code>{prefix}restart -f</code>."
         ),
         "log_chat_unset": "не задан (будет создан при первом запуске)",
         "reason_mention_id": "упоминание (по id)",
@@ -79,7 +79,7 @@ class CyberGuardMod(loader.Module):
             "Увімкнено: <b>{}</b>\n"
             "Чат для логів: <b><code>{}</code></b>\n\n"
             "Команди: <code>{prefix}guard_on</code>, <code>{prefix}guard_off</code>, <code>{prefix}guard_status</code>\n\n"
-            "💡 Якщо чат для логів не працює, скиньте БД: <code>{prefix}e self._db.pop(\"CyberGuard\", None)</code>"
+            "💡 Якщо чат не працює, скиньте БД: <code>{prefix}e self._db.pop(\"CyberGuard\", None)</code>, після чого перезапустіть Heroku командою <code>{prefix}restart -f</code>."
         ),
         "log_chat_unset": "не задано (буде створено при першому запуску)",
         "reason_mention_id": "згадка (за id)",
@@ -108,7 +108,7 @@ class CyberGuardMod(loader.Module):
             "Aktiviert: <b>{}</b>\n"
             "Log-Chat: <b><code>{}</code></b>\n\n"
             "Befehle: <code>{prefix}guard_on</code>, <code>{prefix}guard_off</code>, <code>{prefix}guard_status</code>\n\n"
-            "💡 Wenn der Log-Chat fehlschlägt, setzen Sie die DB zurück: <code>{prefix}e self._db.pop(\"CyberGuard\", None)</code>"
+            "💡 Falls die Chatprotokolle nicht funktionieren, setzen Sie die Datenbank zurück: <code>{prefix}e self._db.pop(\"CyberGuard\", None)</code>, und starten Sie Heroku anschließend mit <code>{prefix}restart -f</code> neu."
         ),
         "log_chat_unset": "nicht festgelegt (wird beim ersten Start erstellt)",
         "reason_mention_id": "Erwähnung (nach ID)",
