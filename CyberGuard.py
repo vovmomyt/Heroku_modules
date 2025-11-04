@@ -1,4 +1,4 @@
-#meta developer: @krevetkoff and @pakk_user
+#meta developer: @authorgoida and @pakk_user
 #changelog: little fixes
 __version__ = (0, 1, 1)
 from .. import loader, utils
