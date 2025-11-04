@@ -1,5 +1,6 @@
 #meta developer: @krevetkoff and @pakk_user
-__version__ = (0, 0, 1)
+#changelog: little fixes
+__version__ = (0, 1, 1)
 from .. import loader, utils
 from telethon import events
 from telethon.tl.types import MessageEntityMention, MessageEntityMentionName
